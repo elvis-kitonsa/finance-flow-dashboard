@@ -22,10 +22,19 @@ from models import User, Expense, Budget
 
 @app.route('/')
 def dashboard():
+    # 1. Fetch the admin user
+    user = User.query.filter_by(email="admin@financeflow.com").first()
     
-    # Fetch all expenses from the database, newest first
+    # 2. Get the balance from the database (fallback to 0 if user is missing)
+    balance_to_show = user.total_balance if user else 0
+    
+    # 3. Fetch expenses
     all_expenses = Expense.query.order_by(Expense.date_to_handle.desc()).all()
-    return render_template('dashboard.html', expenses=all_expenses)
+    
+    # 4. Pass 'total_balance' to the template
+    return render_template('dashboard.html', 
+                           expenses=all_expenses, 
+                           total_balance=balance_to_show)
 
 # THIS IS THE MISSING ROUTE
 @app.route('/add_expense', methods=['POST'])
@@ -82,7 +91,8 @@ with app.app_context():
 @app.route('/update_balance', methods=['POST'])
 def update_balance():
     data = request.get_json()
-    user = User.query.get(1) # Using your admin user ID
+    # Use the email to find the user instead of ID 1 to be 100% sure
+    user = User.query.filter_by(email="admin@financeflow.com").first() 
     if user:
         user.total_balance = float(data['balance'])
         db.session.commit()
