@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FinanceFlow | Professional Banking</title>
+    <title>FMS | Manage Your Finances With Ease</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
@@ -155,7 +155,7 @@
         <div class="d-flex align-items-center gap-3">
           <div class="text-end d-none d-md-block">
             <small class="text-muted d-block">Friday</small>
-            <span class="fw-bold small">Jan 02, 2026</span>
+            <span class="fw-bold small">Jan 04, 2026</span>
           </div>
           <div class="vr mx-2"></div>
           <img src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" class="rounded-circle" width="42" />
@@ -169,9 +169,9 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <p class="card-label">Total Balance</p>
-                  <h3 class="balance-text mb-0">UGX 2,000,000</h3>
+                  <h3 class="balance-text mb-0" id="display-total-balance">UGX 2,000,000</h3>
                 </div>
-                <div class="icon-box shadow-sm" style="background: rgba(0, 98, 255, 0.1); color: #0062ff">
+                <div class="icon-box shadow-sm" style="background: rgba(0, 98, 255, 0.1); color: #0062ff; cursor: pointer" data-bs-toggle="modal" data-bs-target="#updateBalanceModal" title="Click to adjust balance">
                   <i class="bi bi-wallet2"></i>
                 </div>
               </div>
@@ -247,7 +247,58 @@
         document.getElementById("sidebar").classList.toggle("collapsed");
         document.getElementById("main-wrapper").classList.toggle("expanded");
       }
+
+      // Function for the + and - buttons
+      function adjustValue(amount) {
+        const input = document.getElementById("balance-input");
+        let currentValue = parseInt(input.value) || 0;
+        input.value = currentValue + amount;
+      }
+
+      // Function to update the UI
+      function saveNewBalance() {
+        const newVal = document.getElementById("balance-input").value;
+        const display = document.getElementById("display-total-balance");
+
+        // Format the number for the UGX display
+        const formatted = new Intl.NumberFormat("en-US").format(newVal);
+        display.innerText = `UGX ${formatted}`;
+
+        // Close the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("updateBalanceModal"));
+        modal.hide();
+      }
+
+      // Allow "Enter" key to save
+      document.getElementById("balance-input").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          saveNewBalance();
+        }
+      });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="modal fade" id="updateBalanceModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card border-0">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="fw-bold">Adjust Total Balance</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body py-4">
+            <div class="text-center mb-4">
+              <small class="text-muted text-uppercase fw-bold">Current Adjustment</small>
+              <div class="d-flex align-items-center justify-content-center gap-3 mt-2">
+                <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(-25000)" style="width: 45px; height: 45px">-</button>
+                <input type="number" id="balance-input" class="form-control form-control-lg text-center fw-bold border-0 bg-light" value="2000000" style="width: 200px; border-radius: 15px" />
+                <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(25000)" style="width: 45px; height: 45px">+</button>
+              </div>
+              <p class="small text-muted mt-3">Step size: 25,000 UGX</p>
+            </div>
+            <button class="btn btn-primary w-100 py-3 rounded-4 fw-bold shadow-sm" onclick="saveNewBalance()">Update Balance</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
