@@ -22,19 +22,27 @@ from models import User, Expense, Budget
 
 @app.route('/')
 def dashboard():
-    # 1. Fetch the admin user
     user = User.query.filter_by(email="admin@financeflow.com").first()
-    
-    # 2. Get the balance from the database (fallback to 0 if user is missing)
-    balance_to_show = user.total_balance if user else 0
-    
-    # 3. Fetch expenses
     all_expenses = Expense.query.order_by(Expense.date_to_handle.desc()).all()
     
-    # 4. Pass 'total_balance' to the template
+    total_balance = user.total_balance if user else 0
+    
+    # 1. Sum of everything that is NOT 'Savings' (Actual Costs)
+    total_spent = sum(exp.amount for exp in all_expenses if exp.category != 'Savings')
+    
+    # 2. Sum of everything categorized as 'Savings'
+    amount_saved = sum(exp.amount for exp in all_expenses if exp.category == 'Savings')
+    
+    # 3. Total Remaining = Starting Balance - (Everything Spent + Everything Saved)
+    # This is the money left in your wallet for daily use
+    remaining = total_balance - (total_spent + amount_saved)
+
     return render_template('dashboard.html', 
                            expenses=all_expenses, 
-                           total_balance=balance_to_show)
+                           total_balance=total_balance,
+                           total_spent=total_spent,
+                           total_remaining=remaining,
+                           amount_saved=amount_saved)
 
 # THIS IS THE MISSING ROUTE
 @app.route('/add_expense', methods=['POST'])
