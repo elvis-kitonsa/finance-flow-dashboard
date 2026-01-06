@@ -203,22 +203,37 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body py-4">
-            <div class="text-center mb-4">
-              <small class="text-muted text-uppercase fw-bold">Current Adjustment</small>
-              <div class="d-flex align-items-center justify-content-center gap-3 mt-2">
-                <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(-25000)" style="width: 45px; height: 45px">-</button>
-                <input type="number" id="balance-input" class="form-control form-control-lg text-center fw-bold border-0 bg-light" value="2000000" style="width: 200px; border-radius: 15px" />
-                <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(25000)" style="width: 45px; height: 45px">+</button>
+            <div id="balance-setup-view">
+              <div class="text-center mb-4">
+                <small class="text-muted text-uppercase fw-bold">Current Adjustment</small>
+                <div class="d-flex align-items-center justify-content-center gap-3 mt-2">
+                  <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(-25000)" style="width: 45px; height: 45px">-</button>
+                  <input type="number" id="balance-input" class="form-control form-control-lg text-center fw-bold border-0 bg-light" value="{{ total_balance }}" style="width: 200px; border-radius: 15px" />
+                  <button class="btn btn-outline-primary rounded-circle" onclick="adjustValue(25000)" style="width: 45px; height: 45px">+</button>
+                </div>
+                <p class="small text-muted mt-3">Step size: 25,000 UGX</p>
               </div>
-              <p class="small text-muted mt-3">Step size: 25,000 UGX</p>
+
+              <div class="form-check form-switch d-flex justify-content-center gap-3 mb-4">
+                <input class="form-check-input" type="checkbox" id="reset-all-data" />
+                <label class="form-check-label fw-bold text-danger" for="reset-all-data">Reset all expenses & cards?</label>
+              </div>
+
+              <button class="btn btn-primary w-100 py-3 rounded-4 fw-bold shadow-sm" onclick="checkResetFlag()">Update Balance</button>
             </div>
 
-            <div class="form-check form-switch d-flex justify-content-center gap-3 mb-4">
-              <input class="form-check-input" type="checkbox" id="reset-all-data" />
-              <label class="form-check-label fw-bold text-danger" for="reset-all-data"> Reset all expenses & cards? </label>
-            </div>
+            <div id="reset-confirm-view" class="d-none text-center py-4">
+              <div class="bg-danger-subtle text-danger rounded-circle d-inline-flex p-3 mb-3">
+                <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+              </div>
+              <h4 class="fw-bold">Clear All Data?</h4>
+              <p class="text-muted small px-4">This will permanently delete every expense record and reset your Spent/Saved cards to zero. This cannot be undone.</p>
 
-            <button class="btn btn-primary w-100 py-3 rounded-4 fw-bold shadow-sm" onclick="saveNewBalance()">Update Balance</button>
+              <div class="d-flex gap-2 mt-4">
+                <button class="btn btn-light rounded-pill fw-bold flex-grow-1" onclick="toggleResetConfirm(false)">No, Go Back</button>
+                <button class="btn btn-danger rounded-pill fw-bold flex-grow-1" onclick="saveNewBalance()">Yes, Clear All</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

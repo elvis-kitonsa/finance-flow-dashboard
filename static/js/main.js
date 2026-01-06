@@ -217,3 +217,35 @@ async function executeDelete() {
 document.getElementById("expenseDetailModal").addEventListener("hidden.bs.modal", function () {
   toggleDeleteConfirm(false);
 });
+
+// 7. BALANCE RESET CONFIRMATION LOGIC
+// Switches between the Input form and the Warning card in the Balance Modal
+function toggleResetConfirm(showWarning) {
+  const setupView = document.getElementById("balance-setup-view");
+  const confirmView = document.getElementById("reset-confirm-view");
+
+  if (showWarning) {
+    setupView.classList.add("d-none");
+    confirmView.classList.remove("d-none");
+  } else {
+    setupView.classList.remove("d-none");
+    confirmView.classList.add("d-none");
+  }
+}
+
+// Logic for the "Update Balance" button inside the modal
+function checkResetFlag() {
+  const shouldReset = document.getElementById("reset-all-data").checked;
+
+  if (shouldReset) {
+    toggleResetConfirm(true); // Intercept and show the warning card
+  } else {
+    saveNewBalance(); // Proceed immediately if toggle is OFF
+  }
+}
+
+// Ensure the balance modal resets its view when closed
+document.getElementById("updateBalanceModal").addEventListener("hidden.bs.modal", function () {
+  toggleResetConfirm(false);
+  document.getElementById("reset-all-data").checked = false;
+});

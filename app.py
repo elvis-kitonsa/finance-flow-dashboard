@@ -48,9 +48,21 @@ def update_balance():
     data = request.get_json()
     user = User.query.filter_by(email="admin@financeflow.com").first() 
     if user:
-        user.total_balance = float(data['balance'])
-        db.session.commit()
-        return jsonify({"status": "success", "new_balance": user.total_balance})
+        try:
+            # 1. Update the fixed Total Balance
+            user.total_balance = float(data['balance'])
+            
+            # 2. Check if the "Reset all" toggle was ON
+            if data.get('should_reset'):
+                # This line wipes the list and resets 'Spent' and 'Saved' cards to 0
+                Expense.query.filter_by(user_id=user.id).delete()
+            
+            db.session.commit()
+            return jsonify({"status": "success", "new_balance": user.total_balance})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"status": "error", "message": str(e)}), 500
+            
     return jsonify({"status": "error"}), 404
 
 @app.route('/add_expense', methods=['POST'])
