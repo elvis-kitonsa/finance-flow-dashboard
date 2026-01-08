@@ -1,47 +1,75 @@
 {% extends "base.html" %} {% block content %}
-<div class="container d-flex align-items-center justify-content-center py-5">
-  <div class="neo-card w-100" style="max-width: 800px">
-    <div class="text-center mb-5">
-      <h2 class="fw-800 mb-1" style="font-size: 2.2rem; letter-spacing: -1.5px">Initialize Account</h2>
-      <p class="text-muted">Set up your private wealth management profile.</p>
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh; overflow: hidden">
+  <div class="neo-card w-100 p-4 shadow-lg border-0" style="max-width: 700px; background: rgba(255, 255, 255, 0.95); border-radius: 30px; backdrop-filter: blur(10px)">
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border-radius: 15px">
+        <i data-lucide="user-plus" size="24" class="text-white"></i>
+      </div>
+      <h2 class="fw-bold text-dark mb-0" style="letter-spacing: -1px; font-size: 1.8rem">Initialize Account</h2>
+      <p class="text-muted small">Set up your private wealth management profile.</p>
     </div>
 
     <form method="POST">
-      <div class="row g-4">
+      <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">Full Name</label>
-          <input type="text" name="full_name" class="form-control" placeholder="Enter name" required />
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Full Name</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="user" size="16" class="text-muted"></i></span>
+              <input type="text" name="full_name" class="form-control border-start-0 py-2" placeholder="John Doe" required />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Email Address</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="mail" size="16" class="text-muted"></i></span>
+              <input type="email" name="email" class="form-control border-start-0 py-2" placeholder="name@email.com" required />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Phone Number</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="phone" size="16" class="text-muted"></i></span>
+              <input type="text" name="phone" class="form-control border-start-0 py-2" placeholder="+256..." required />
+            </div>
+          </div>
         </div>
+
         <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">Email</label>
-          <input type="email" name="email" class="form-control" placeholder="name@email.com" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">Phone</label>
-          <input type="text" name="phone" class="form-control" placeholder="+256..." required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">National ID (NIN)</label>
-          <input type="text" name="national_id" class="form-control" placeholder="ID Number" required />
-        </div>
-        <div class="col-12">
-          <label class="form-label small fw-bold text-muted ps-2">Residential Address</label>
-          <input type="text" name="home_address" class="form-control" placeholder="Street, City, Country" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">Date of Birth</label>
-          <input type="date" name="dob" class="form-control" required />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small fw-bold text-muted ps-2">Security Key (Password)</label>
-          <input type="password" name="password" class="form-control" placeholder="••••••••" required />
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Date of Birth</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="calendar" size="16" class="text-muted"></i></span>
+              <input type="date" name="dob" class="form-control border-start-0 py-2" required />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Residential Address</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="map-pin" size="16" class="text-muted"></i></span>
+              <input type="text" name="home_address" class="form-control border-start-0 py-2" placeholder="Street, City" required />
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold text-muted ps-1 mb-1">Access Key</label>
+            <div class="input-group input-group-merge shadow-sm rounded-3">
+              <span class="input-group-text bg-white border-end-0"><i data-lucide="lock" size="16" class="text-muted"></i></span>
+              <input type="password" name="password" class="form-control border-start-0 py-2" placeholder="••••••••" required />
+            </div>
+          </div>
         </div>
       </div>
 
-      <button type="submit" class="btn-primary-rocky w-100 mt-5 shadow">Complete Onboarding</button>
+      <button type="submit" class="btn btn-primary w-100 py-2 mt-4 shadow-sm rounded-4 fw-bold">Complete Onboarding</button>
     </form>
 
-    <p class="text-center mt-4 small text-muted">Already registered? <a href="{{ url_for('login') }}" class="text-primary fw-bold text-decoration-none">Sign In</a></p>
+    <div class="text-center mt-3 pt-3 border-top">
+      <p class="small text-muted mb-0">Already registered? <a href="{{ url_for('login') }}" class="fw-bold text-primary text-decoration-none">Sign In</a></p>
+    </div>
   </div>
 </div>
 {% endblock %}
