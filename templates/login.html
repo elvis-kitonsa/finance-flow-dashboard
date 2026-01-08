@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh; overflow: hidden">
+  <div class="neo-card w-100 p-4 p-md-5 shadow-lg border-0" style="max-width: 420px; background: rgba(255, 255, 255, 0.95); border-radius: 30px; backdrop-filter: blur(10px)">
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border-radius: 18px; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3)">
+        <i data-lucide="shield-check" size="28" class="text-white"></i>
+      </div>
+      <h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px">Secure Vault</h2>
+      <p class="text-muted small">Unlock your financial pulse</p>
+    </div>
+
+    <form method="POST">
+      <div class="mb-3">
+        <div class="input-group input-group-merge shadow-sm rounded-4">
+          <span class="input-group-text bg-white border-end-0 ps-3"><i data-lucide="mail" size="18" class="text-muted"></i></span>
+          <input type="text" name="identifier" class="form-control border-start-0 py-2" placeholder="Email or Phone" required />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="input-group input-group-merge shadow-sm rounded-4">
+          <span class="input-group-text bg-white border-end-0 ps-3"><i data-lucide="key-round" size="18" class="text-muted"></i></span>
+          <input type="password" name="password" class="form-control border-start-0 py-2" placeholder="Access Key" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2 mb-3 shadow-sm rounded-4 fw-bold">Authorize Access</button>
+
+      <div class="text-center mb-3">
+        <button type="button" class="btn btn-link text-decoration-none text-primary small fw-bold d-flex align-items-center justify-content-center gap-2 m-auto"><i data-lucide="fingerprint" size="18"></i> Use Biometrics</button>
+      </div>
+    </form>
+
+    <div class="text-center mt-3 pt-3 border-top">
+      <p class="small text-muted mb-2">New to FinanceFlow?</p>
+      <a href="{{ url_for('register') }}" class="fw-bold text-primary text-decoration-none small">Create Secure Account</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+{% endblock %}
