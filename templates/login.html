@@ -18,9 +18,25 @@
 
     <form method="POST">
       <div class="mb-3">
-        <div class="input-group input-group-merge shadow-sm rounded-4">
+        <!-- Login options: Email or Phone Number -->
+        <div class="d-flex bg-light rounded-pill p-1 mb-3" style="border: 1px solid #e2e8f0; font-size: 0.8rem">
+          <button type="button" id="emailBtn" class="btn btn-sm w-50 rounded-pill fw-bold bg-white text-primary shadow-sm" onclick="toggleInput('email')">Email</button>
+          <button type="button" id="phoneBtn" class="btn btn-sm w-50 rounded-pill fw-bold text-muted" onclick="toggleInput('phone')">Phone</button>
+        </div>
+
+        <div id="emailContainer" class="input-group input-group-merge shadow-sm rounded-4">
           <span class="input-group-text bg-white border-end-0 ps-3"><i data-lucide="mail" size="18" class="text-muted"></i></span>
-          <input type="text" name="identifier" class="form-control border-start-0 py-2" placeholder="Email or Phone" required />
+          <input type="email" name="email" class="form-control border-start-0 py-2" placeholder="name@email.com" id="emailInput" />
+        </div>
+
+        <div id="phoneContainer" class="input-group input-group-merge shadow-sm rounded-4 d-none">
+          <button class="btn btn-white border-end-0 dropdown-toggle text-dark fw-bold" type="button" data-bs-toggle="dropdown" id="activeCode" style="border-top-left-radius: 15px; border-bottom-left-radius: 15px; font-size: 0.9rem">+256</button>
+          <ul class="dropdown-menu shadow border-0">
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="setCode('+256')">🇺🇬 +256</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="setCode('+254')">🇰🇪 +254</a></li>
+          </ul>
+          <input type="text" name="phone" class="form-control border-start-0 py-2" placeholder="71234567" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="phoneInput" />
+          <input type="hidden" name="country_code" id="country_code_val" value="+256" />
         </div>
       </div>
 
@@ -44,5 +60,31 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
   lucide.createIcons();
+
+  function toggleInput(mode) {
+    const emailCon = document.getElementById("emailContainer");
+    const phoneCon = document.getElementById("phoneContainer");
+    const eBtn = document.getElementById("emailBtn");
+    const pBtn = document.getElementById("phoneBtn");
+
+    if (mode === "email") {
+      emailCon.classList.remove("d-none");
+      phoneCon.classList.add("d-none");
+      eBtn.classList.add("bg-white", "text-primary", "shadow-sm");
+      pBtn.classList.remove("bg-white", "text-primary", "shadow-sm", "text-muted");
+      pBtn.classList.add("text-muted");
+    } else {
+      emailCon.classList.add("d-none");
+      phoneCon.classList.remove("d-none");
+      pBtn.classList.add("bg-white", "text-primary", "shadow-sm");
+      eBtn.classList.remove("bg-white", "text-primary", "shadow-sm", "text-muted");
+      eBtn.classList.add("text-muted");
+    }
+  }
+
+  function setCode(code) {
+    document.getElementById("activeCode").innerText = code;
+    document.getElementById("country_code_val").value = code;
+  }
 </script>
 {% endblock %}
