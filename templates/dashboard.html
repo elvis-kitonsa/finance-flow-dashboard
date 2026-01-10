@@ -1,3 +1,6 @@
+<!-- This is the main dashboard page for the FMS System -->
+<!-- Extends the base template for consistent layout and styles across the app -->
+{% extends "base.html" %} {% block content %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,6 +13,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/edits.css') }}" />
   </head>
   <body>
+    <!-- Sidebar Navigation for the FinanceFlow Dashboard -->
+    <!-- Includes links to different sections like Overview, Accounts, Analytics, and Security -->
     <nav id="sidebar">
       <div class="p-4 d-flex align-items-center justify-content-between mb-4">
         <h4 class="text-white fw-bold mb-0 logo-text">F<span style="color: var(--primary-accent)">M</span>S</h4>
@@ -23,6 +28,8 @@
       </div>
     </nav>
 
+    <!-- Main Wrapper for Dashboard Content -->
+    <!-- Includes top navigation bar, summary cards, and expense table -->
     <div id="main-wrapper">
       <header class="top-nav d-flex justify-content-between align-items-center">
         <h5 class="fw-bold mb-0">FinanceFlow | Dashboard</h5>
@@ -32,15 +39,19 @@
             <span class="fw-bold small" id="current-date">Loading...</span>
           </div>
           <div class="vr mx-2"></div>
+          <!-- Dropdown Profile Menu -->
+          <!-- Includes options for profile, accounts, settings, dark mode toggle, and sign out -->
           <div class="dropdown">
             <div class="user-avatar dropdown-toggle shadow-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
-              <span id="user-initials">KE</span>
+              <!-- Display user's initials in the avatar circle -->
+              <span id="user-initials">{{ current_user.full_name[:2].upper() }}</span>
             </div>
 
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
               <div class="dropdown-header-custom">
-                <div class="fw-bold text-dark">Kitonsa Elvis</div>
-                <div class="small">elvis@financeflow.com</div>
+                <!-- Show user's full name and email at the top of the dropdown -->
+                <div class="fw-bold text-dark">{{ current_user.full_name }}</div>
+                <div class="small text-muted">{{ current_user.email }}</div>
               </div>
 
               <li>
@@ -67,7 +78,9 @@
               <li><hr class="dropdown-divider" /></li>
 
               <li>
-                <a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Sign out</a>
+                <!-- Logout option to end user session -->
+                <!-- Link to the logout route defined in app.py -->
+                <a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> Sign out</a>
               </li>
             </ul>
           </div>
@@ -175,7 +188,11 @@
                   </span>
                 </td>
                 <td class="text-center">
+                  {% if expense.is_covered %}
                   <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2"> <i class="bi bi-shield-check me-1"></i> Covered </span>
+                  {% else %}
+                  <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2"> <i class="bi bi-clock-history me-1"></i> Pending </span>
+                  {% endif %}
                 </td>
                 <td class="pe-4 text-end fw-bold {% if expense.category == 'Savings' %}text-primary{% else %}text-danger{% endif %}">{% if expense.category != 'Savings' %}-{% endif %}{{ "{:,.0f}".format(expense.amount) }}</td>
               </tr>
@@ -278,7 +295,7 @@
                     <option value="Health">💊 Health & Medical</option>
                   </optgroup>
                   <optgroup label="Financial">
-                    <option value="Savings">💰 Savings (Move to Saved Card)</option>
+                    <option value="Savings">💰 Savings</option>
                     <option value="Investment">📈 Investment</option>
                   </optgroup>
                 </select>
@@ -348,9 +365,14 @@
           <div class="modal-footer border-0 d-flex gap-2">
             <input type="hidden" id="modalExpenseId" value="" />
 
+            <!-- RECEIPT FOOTER BUTTONS FOR MARKING AS PAID AND DELETION CONFIRMATION -->
+            <!-- Allows user to mark expense as paid and also delete the expense record -->
             <div id="receipt-footer-btns" class="w-100 d-flex gap-2">
-              <button type="button" class="btn btn-outline-danger rounded-pill fw-bold flex-grow-1" onclick="toggleDeleteConfirm(true)"><i class="bi bi-trash3 me-2"></i>Delete</button>
-              <button type="button" class="btn btn-light rounded-pill fw-bold flex-grow-1" data-bs-dismiss="modal">Close</button>
+              <button type="button" id="markPaidBtn" class="btn btn-success rounded-pill fw-bold flex-grow-1" onclick="markAsPaid()"><i class="bi bi-check-lg me-2"></i>Mark as Paid</button>
+
+              <button type="button" class="btn btn-outline-danger rounded-pill fw-bold" onclick="toggleDeleteConfirm(true)">
+                <i class="bi bi-trash3"></i>
+              </button>
             </div>
 
             <div id="confirm-footer-btns" class="w-100 d-flex gap-2 d-none">

@@ -59,7 +59,7 @@ class Expense(db.Model):
     category = db.Column(db.String(50), nullable=False)
     # Captures date and time for notifications
     date_to_handle = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    is_paid = db.Column(db.Boolean, default=False)
+    is_covered = db.Column(db.Boolean, default=False) #Used to track if expense is covered or pending
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 # Budget model to store budget allocations per category

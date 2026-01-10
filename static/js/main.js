@@ -205,6 +205,17 @@ function handleRowClick(row) {
   document.getElementById("modalAmount").innerText = formattedAmount;
   document.getElementById("modalDateTime").innerText = date;
 
+  // 3.5 Status Logic: Show/Hide "Mark as Paid" button
+  // This checks the expense's status and adjusts button visibility accordingly
+  const isCovered = row.getAttribute("data-covered") === "True";
+  const markPaidBtn = document.getElementById("markPaidBtn");
+
+  if (isCovered) {
+    markPaidBtn.classList.add("d-none"); // Hide if already paid
+  } else {
+    markPaidBtn.classList.remove("d-none"); // Show if pending
+  }
+
   // 4. Trigger the Modal (Using the Bootstrap 5 static method)
   const modalElement = document.getElementById("expenseDetailModal");
   const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
@@ -302,3 +313,36 @@ document.getElementById("updateBalanceModal").addEventListener("hidden.bs.modal"
   toggleResetConfirm(false);
   document.getElementById("reset-all-data").checked = false;
 });
+
+// 8. MARK AS PAID FUNCTIONALITY
+// Sends a request to mark the expense as paid and updates the UI accordingly
+function markAsPaid() {
+  const expenseId = document.getElementById("modalExpenseId").value;
+  const markPaidBtn = document.getElementById("markPaidBtn");
+
+  // Add a loading state to the button
+  markPaidBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Updating...';
+  markPaidBtn.disabled = true;
+
+  fetch(`/mark_paid/${expenseId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        // Success! Refresh the page to update balances and table status
+        window.location.reload();
+      } else {
+        alert("Error: " + (data.message || "Could not update status."));
+        // Reset button if it fails
+        markPaidBtn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Mark as Paid';
+        markPaidBtn.disabled = false;
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("An error occurred. Please check your connection.");
+      markPaidBtn.disabled = false;
+    });
+}

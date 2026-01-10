@@ -58,7 +58,7 @@ def register():
                 full_name=full_name,
                 password_hash=generate_password_hash(password),
                 dob=datetime.strptime(dob_str, '%Y-%m-%d').date() if dob_str else None,
-                total_balance=0.0
+                total_balance=0.0 #This initializes the user's balance at 0 upon registration
             )
             db.session.add(new_user)
             db.session.commit()
@@ -71,19 +71,29 @@ def register():
         
     return render_template('register.html')
 
+# 2. Login Route
+# Handles user login with email or phone number
+# Uses both GET and POST methods because it displays the login form and processes it
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        # Capture credentials from the form ie. the email/phone and password fields
         identifier = request.form.get('identifier')
         password = request.form.get('password')
         
+        # Find user by email or phone
         user = User.query.filter((User.email == identifier) | (User.phone == identifier)).first()
         
+        # Security Check: Verify user exists and password matches
         if user and check_password_hash(user.password_hash, password):
+
+            #If credentials are valid, log the user in (Establish session) and redirect to dashboard
             login_user(user)
+            flash(f'Welcome back, {user.full_name}!', 'success')
             return redirect(url_for('dashboard'))
         
-        flash('Invalid credentials', 'danger')
+        # Error Handling: Invalid credentials
+        flash('Invalid credentials. Please try again.', 'danger')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -97,6 +107,7 @@ def logout():
 @app.route('/')
 @login_required # Dashboard now requires login
 def dashboard():
+    
     # CHANGE: Use current_user.id to filter expenses
     all_expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date_to_handle.desc()).all()
     
@@ -206,6 +217,27 @@ def update_expense_description(expense_id):
         except Exception as e:
             db.session.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
+
+# MARK AS PAID ROUTE
+# Updates the 'is_covered' status of an expense to True
+@app.route('/mark_paid/<int:expense_id>', methods=['POST'])
+@login_required
+def mark_paid(expense_id):
+    # 1. Locate the specific expense
+    expense = Expense.query.get_or_404(expense_id)
+
+    # 2. Security Check: Ensure this expense belongs to the logged-in user
+    if expense.user_id != current_user.id:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 403
+
+    try:
+        # 3. Update the status and save to the database
+        expense.is_covered = True
+        db.session.commit()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 # --- DATABASE INITIALIZATION ---
 
