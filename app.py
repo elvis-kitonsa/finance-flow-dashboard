@@ -39,8 +39,11 @@ def load_user(user_id):
 def register():
     if request.method == 'POST':
         # Match these fields with your registration form - /templates/register.html
-        email = request.form.get('email')
-        phone = request.form.get('phone')
+        # force the email to lowercase before it even hits the database
+        email = request.form.get('email').strip().lower() # Add .lower() here!
+        country_code = request.form.get('country_code', '+256') # Get the hidden input from HTML
+        raw_phone = request.form.get('phone').strip()
+        phone = f"{country_code}{raw_phone}" # Joins them: +256770000000
         password = request.form.get('password')
         full_name = request.form.get('full_name')
         dob_str = request.form.get('dob') # This comes as a string "YYYY-MM-DD"
@@ -58,7 +61,19 @@ def register():
                 full_name=full_name,
                 password_hash=generate_password_hash(password),
                 dob=datetime.strptime(dob_str, '%Y-%m-%d').date() if dob_str else None,
-                total_balance=0.0 #This initializes the user's balance at 0 upon registration
+                # total_balance=0.0 #This initializes the user's balance at 0 upon registration
+
+                # Fields REQUIRED by your database but HIDDEN from the user
+                total_balance=0.0,
+                home_address="Not Provided", 
+                national_id="Pending Verification",
+                employment_status="Not Specified",
+                monthly_income=0.0,
+                financial_goals="General",
+                terms_agreed=True,           # Automatically agree since there is no checkbox
+                privacy_consent=True,
+                data_accuracy_declaration=True,
+                base_currency="UGX"          # Default currency
             )
             db.session.add(new_user)
             db.session.commit()
@@ -66,6 +81,7 @@ def register():
             return redirect(url_for('login'))
         except Exception as e:
             db.session.rollback()
+            # This will show you exactly if any other field is missing
             flash(f'Error creating account: {str(e)}', 'danger')
             return redirect(url_for('register'))
         
@@ -76,20 +92,29 @@ def register():
 # Uses both GET and POST methods because it displays the login form and processes it
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Force the database to refresh its connection
+    db.session.remove()
+
     if request.method == 'POST':
+        # Safety Check: Use .get() and provide a default empty string ''
+        raw_identifier = request.form.get('identifier')
         # Capture credentials from the form ie. the email/phone and password fields
-        identifier = request.form.get('identifier')
+        identifier = request.form.get('identifier').strip().lower() if raw_identifier else ""# Clean the input
         password = request.form.get('password')
         
         # Find user by email or phone
         user = User.query.filter((User.email == identifier) | (User.phone == identifier)).first()
-        
-        # Security Check: Verify user exists and password matches
-        if user and check_password_hash(user.password_hash, password):
 
-            #If credentials are valid, log the user in (Establish session) and redirect to dashboard
+        # 3. Security Check: Differentiated feedback for debugging
+        if not user:
+            flash('No account found with that Email or Phone number.', 'danger')
+            return redirect(url_for('login'))
+        
+        # Another Safety Check: Ensure password_hash exists before checking
+        if user.password_hash and check_password_hash(user.password_hash, password):
             login_user(user)
-            flash(f'Welcome back, {user.full_name}!', 'success')
+            # Before redirecting, ensure we don't crash the dashboard
+            flash(f'Welcome back!', 'success')
             return redirect(url_for('dashboard'))
         
         # Error Handling: Invalid credentials
