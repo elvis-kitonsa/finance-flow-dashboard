@@ -256,20 +256,31 @@
         <form id="expense-form">
           <div class="mb-3">
             <label class="form-label small fw-bold text-muted">DESCRIPTION</label>
-            <input type="text" id="expense-desc" class="form-control border-0 bg-light rounded-3" placeholder="e.g., Savings for Christmas" required />
+            <input type="text" id="expense-desc" class="form-control border-0 bg-light rounded-3" placeholder="Describe your expense" required />
           </div>
           <div class="mb-3">
             <label class="form-label small fw-bold text-muted">CATEGORY</label>
             <select class="form-select border-0 bg-light rounded-3 shadow-sm" id="expense-category">
-              <optgroup label="Essential">
-                <option value="Food">🍎 Food & Dining</option>
-                <option value="Transport">🚗 Transport & Fuel</option>
+              <optgroup label="Essential & Home">
+                <option value="Food">🍽️ Food & Dining</option>
+                <option value="Transport">⛽ Transport & Fuel</option>
                 <option value="Bills">🔌 Utilities & Bills</option>
-                <option value="Rent">🏠 Rent/Mortgage</option>
+                <option value="Rent">🏠 Rent & Mortgage</option>
+                <option value="Health">💊 Health & Medical</option>
               </optgroup>
-              <optgroup label="Financial">
-                <option value="Savings">💰 Savings</option>
-                <option value="Investment">📈 Investment</option>
+
+              <optgroup label="Lifestyle & Personal">
+                <option value="Shopping">🛍️ Shopping</option>
+                <option value="Entertainment">🎟️ Entertainment</option>
+                <option value="Education">🎓 Learning & Skills</option>
+                <option value="PersonalCare">💈 Personal Care</option>
+              </optgroup>
+
+              <optgroup label="Financial & Future">
+                <option value="Savings">🏦 Savings</option>
+                <option value="Investment">📊 Investment</option>
+                <option value="Debt">💳 Debt & Loans</option>
+                <option value="Emergency">🚨 Emergency Fund</option>
               </optgroup>
             </select>
           </div>
