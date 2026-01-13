@@ -21,7 +21,7 @@
 :root {
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 85px;
-  --primary-accent: #0062ff; /* Deep Fintech Blue */
+  --primary-accent: #0000ff; /* Deep Fintech Blue */
   --bank-dark: #0a0e17; /* High-contrast Navy */
   --bg-soft: #f4f7fa;
   --glass: rgba(255, 255, 255, 0.8);
@@ -164,7 +164,7 @@ h2,
   width: 42px;
   height: 42px;
   background: linear-gradient(135deg, #4361ee, #4cc9f0);
-  color: white;
+  /color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -232,11 +232,11 @@ h2,
 
 .dropdown-item:hover {
   background-color: #f6f8fa !important;
-  color: #0969da !important; /* GitHub Blue hover */
+  color: #0000ff !important; /* GitHub Blue hover */
 }
 
 .dropdown-item:hover i {
-  color: #0969da !important;
+  color: #0000ff !important;
 }
 
 /* Divider */
@@ -310,7 +310,7 @@ h2,
 
 /* Deeper blue on hover for Desktop */
 .clickable-icon:hover {
-  background: #0062ff !important;
+  background: #0000ff !important;
   color: white !important;
   transform: translateY(-2px);
 }
